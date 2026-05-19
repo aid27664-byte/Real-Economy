@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Real Economy | Бюджеты и ВВП без иллюзий</title>
+    <title>The Real Economy | Истинный ВВП</title>
     <style>
         :root {
             --bg-color: #0f172a;
@@ -11,6 +11,7 @@
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --accent-green: #10b981;
+            --accent-red: #ef4444;
             --accent-blue: #3b82f6;
             --border-color: #334155;
         }
@@ -26,8 +27,8 @@
         }
         header {
             text-align: center;
-            padding: 4rem 1rem 2rem 1rem;
-            max-width: 800px;
+            padding: 3rem 1rem 1rem 1rem;
+            max-width: 900px;
         }
         h1 {
             font-size: 2.5rem;
@@ -43,7 +44,7 @@
         }
         .container {
             width: 100%;
-            max-width: 1100px;
+            max-width: 1000px;
             padding: 1rem;
         }
         .info-box {
@@ -51,16 +52,17 @@
             padding: 1.5rem;
             border-radius: 8px;
             margin-bottom: 2rem;
-            border-left: 4px solid var(--accent-green);
+            border-left: 4px solid var(--accent-blue);
             line-height: 1.5;
+            font-size: 0.95rem;
         }
         .table-wrapper {
             background-color: var(--card-bg);
             border-radius: 8px;
             overflow-x: auto;
-            max-height: 700px;
+            max-height: 800px; /* Ограничитель высоты для скролла */
             overflow-y: auto;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
         }
         table {
             width: 100%;
@@ -68,11 +70,12 @@
             text-align: right;
         }
         th, td {
-            padding: 1rem;
+            padding: 0.8rem 1rem;
             border-bottom: 1px solid var(--border-color);
             white-space: nowrap;
         }
-        th:first-child, td:first-child {
+        th:nth-child(1), td:nth-child(1),
+        th:nth-child(2), td:nth-child(2) {
             text-align: left;
         }
         th {
@@ -84,112 +87,148 @@
             position: sticky;
             top: 0;
             z-index: 10;
-            box-shadow: 0 2px 2px -1px rgba(0, 0, 0, 0.4);
         }
         tr:hover {
             background-color: #334155;
-            transition: background-color 0.2s ease;
+            transition: 0.2s;
         }
-        .real-value {
-            color: var(--accent-green);
-            font-weight: bold;
-        }
-        .highlight-row {
-            background-color: rgba(59, 130, 246, 0.1);
-        }
-        .highlight-row:hover {
-            background-color: rgba(59, 130, 246, 0.2);
-        }
-        footer {
-            margin-top: 3rem;
-            padding: 2rem;
-            text-align: center;
-            color: var(--text-muted);
-            font-size: 0.9rem;
-        }
+        .growth-pos { color: var(--accent-green); font-weight: bold; }
+        .growth-neg { color: var(--accent-red); font-weight: bold; }
+        .growth-mega { color: #f59e0b; font-weight: bold; text-shadow: 0 0 5px rgba(245, 158, 11, 0.3); }
+        .highlight-row { background-color: rgba(59, 130, 246, 0.1); }
     </style>
 </head>
 <body>
 
     <header>
         <h1>The Real <span>Economy</span></h1>
-        <p class="subtitle">Номинальные триллионы в новостях — это иллюзия. Мы убираем инфляционный шум доллара (коэффициент 1.83 с 2000 года) и показываем реальную покупательную способность государственных бюджетов и ВВП на 2025 год.</p>
+        <p class="subtitle">Истинный физический рост экономик: 2000–2026. Данные очищены от инфляции доллара и инфляции национальных валют.</p>
     </header>
 
     <div class="container">
         <div class="info-box">
-            <strong>Системный аудит:</strong> Здесь собраны 50 крупнейших экономик мира. Мы берем фактические госрасходы (центральные бюджеты) и номинальный ВВП на текущий год, а затем очищаем их от накопленной долларовой инфляции. Это позволяет увидеть реальный вес государств в ценах начала тысячелетия.
+            <strong>Системный аудит (Сложный процент):</strong> В этой таблице показан чистый физический рост (или падение) экономики. Мы убрали курсы валют и посчитали совокупный рост ВВП в постоянных ценах по формуле сложного процента за 26 лет. Это ответ на вопрос: <em>«Насколько больше физических товаров и услуг стала производить страна по сравнению с 2000 годом?»</em>.
         </div>
 
         <div class="table-wrapper">
             <table>
                 <thead>
                     <tr>
-                        <th>№ / Страна</th>
-                        <th>ВВП (Номинал)</th>
-                        <th>Реальный ВВП (цены 2000г)</th>
-                        <th>Бюджет (Номинал)</th>
-                        <th>Реальный Бюджет (цены 2000г)</th>
+                        <th>№</th>
+                        <th>Страна</th>
+                        <th>Номинал ВВП 2025/26</th>
+                        <th>Физический рост (2000-2026)</th>
+                        <th>Мультипликатор</th>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr><td>1. 🇺🇸 США</td><td>$28 780 млрд</td><td class="real-value">$15 726 млрд</td><td>$6 900 млрд</td><td class="real-value">$3 770 млрд</td></tr>
-                    <tr><td>2. 🇨🇳 Китай</td><td>$18 530 млрд</td><td class="real-value">$10 125 млрд</td><td>$3 900 млрд</td><td class="real-value">$2 131 млрд</td></tr>
-                    <tr><td>3. 🇬🇧 Великобритания</td><td>$3 500 млрд</td><td class="real-value">$1 912 млрд</td><td>$1 500 млрд</td><td class="real-value">$819 млрд</td></tr>
-                    <tr><td>4. 🇯🇵 Япония</td><td>$4 110 млрд</td><td class="real-value">$2 245 млрд</td><td>$780 млрд</td><td class="real-value">$426 млрд</td></tr>
-                    <tr><td>5. 🇮🇳 Индия</td><td>$3 930 млрд</td><td class="real-value">$2 147 млрд</td><td>$580 млрд</td><td class="real-value">$316 млрд</td></tr>
-                    <tr><td>6. 🇩🇪 Германия</td><td>$4 590 млрд</td><td class="real-value">$2 508 млрд</td><td>$560 млрд</td><td class="real-value">$306 млрд</td></tr>
-                    <tr><td>7. 🇫🇷 Франция</td><td>$3 130 млрд</td><td class="real-value">$1 710 млрд</td><td>$530 млрд</td><td class="real-value">$289 млрд</td></tr>
-                    <tr><td>8. 🇮🇹 Италия</td><td>$2 330 млрд</td><td class="real-value">$1 273 млрд</td><td>$430 млрд</td><td class="real-value">$234 млрд</td></tr>
-                    <tr><td>9. 🇧🇷 Бразилия</td><td>$2 330 млрд</td><td class="real-value">$1 273 млрд</td><td>$400 млрд</td><td class="real-value">$218 млрд</td></tr>
-                    <tr><td>10. 🇷🇺 Россия</td><td>$2 050 млрд</td><td class="real-value">$1 120 млрд</td><td>$377 млрд</td><td class="real-value">$206 млрд</td></tr>
-                    <tr><td>11. 🇪🇸 Испания</td><td>$1 640 млрд</td><td class="real-value">$896 млрд</td><td>$350 млрд</td><td class="real-value">$191 млрд</td></tr>
-                    <tr><td>12. 🇦🇺 Австралия</td><td>$1 790 млрд</td><td class="real-value">$978 млрд</td><td>$340 млрд</td><td class="real-value">$185 млрд</td></tr>
-                    <tr><td>13. 🇰🇷 Южная Корея</td><td>$1 760 млрд</td><td class="real-value">$961 млрд</td><td>$330 млрд</td><td class="real-value">$180 млрд</td></tr>
-                    <tr><td>14. 🇲🇽 Мексика</td><td>$2 010 млрд</td><td class="real-value">$1 098 млрд</td><td>$310 млрд</td><td class="real-value">$169 млрд</td></tr>
-                    <tr><td>15. 🇸🇦 Саудовская Аравия</td><td>$1 100 млрд</td><td class="real-value">$601 млрд</td><td>$300 млрд</td><td class="real-value">$163 млрд</td></tr>
-                    <tr><td>16. 🇮🇩 Индонезия</td><td>$1 470 млрд</td><td class="real-value">$803 млрд</td><td>$260 млрд</td><td class="real-value">$142 млрд</td></tr>
-                    <tr><td>17. 🇹🇷 Турция</td><td>$1 110 млрд</td><td class="real-value">$606 млрд</td><td>$240 млрд</td><td class="real-value">$131 млрд</td></tr>
-                    <tr><td>18. 🇳🇱 Нидерланды</td><td>$1 140 млрд</td><td class="real-value">$622 млрд</td><td>$230 млрд</td><td class="real-value">$125 млрд</td></tr>
-                    <tr><td>19. 🇵🇱 Польша</td><td>$840 млрд</td><td class="real-value">$459 млрд</td><td>$210 млрд</td><td class="real-value">$114 млрд</td></tr>
-                    <tr><td>20. 🇨🇭 Швейцария</td><td>$930 млрд</td><td class="real-value">$508 млрд</td><td>$190 млрд</td><td class="real-value">$103 млрд</td></tr>
-                    <tr><td>21. 🇸🇪 Швеция</td><td>$620 млрд</td><td class="real-value">$338 млрд</td><td>$180 млрд</td><td class="real-value">$98 млрд</td></tr>
-                    <tr><td>22. 🇧🇪 Бельгия</td><td>$650 млрд</td><td class="real-value">$355 млрд</td><td>$170 млрд</td><td class="real-value">$92 млрд</td></tr>
-                    <tr><td>23. 🇳🇴 Норвегия</td><td>$520 млрд</td><td class="real-value">$284 млрд</td><td>$160 млрд</td><td class="real-value">$87 млрд</td></tr>
-                    <tr><td>24. 🇦🇷 Аргентина</td><td>$600 млрд</td><td class="real-value">$327 млрд</td><td>$150 млрд</td><td class="real-value">$81 млрд</td></tr>
-                    <tr><td>25. 🇦🇹 Австрия</td><td>$540 млрд</td><td class="real-value">$295 млрд</td><td>$145 млрд</td><td class="real-value">$79 млрд</td></tr>
-                    <tr><td>26. 🇩🇰 Дания</td><td>$420 млрд</td><td class="real-value">$229 млрд</td><td>$140 млрд</td><td class="real-value">$76 млрд</td></tr>
-                    <tr><td>27. 🇿🇦 ЮАР</td><td>$380 млрд</td><td class="real-value">$207 млрд</td><td>$138 млрд</td><td class="real-value">$75 млрд</td></tr>
-                    <tr><td>28. 🇮🇱 Израиль</td><td>$530 млрд</td><td class="real-value">$289 млрд</td><td>$135 млрд</td><td class="real-value">$73 млрд</td></tr>
-                    <tr><td>29. 🇨🇴 Колумбия</td><td>$380 млрд</td><td class="real-value">$207 млрд</td><td>$132 млрд</td><td class="real-value">$72 млрд</td></tr>
-                    <tr><td>30. 🇮🇪 Ирландия</td><td>$560 млрд</td><td class="real-value">$306 млрд</td><td>$130 млрд</td><td class="real-value">$71 млрд</td></tr>
-                    <tr class="highlight-row"><td>31. 🇺🇦 Украина</td><td>$170 млрд</td><td class="real-value">$92 млрд</td><td>$130 млрд</td><td class="real-value">$71 млрд</td></tr>
-                    <tr><td>32. 🇦🇪 ОАЭ</td><td>$530 млрд</td><td class="real-value">$289 млрд</td><td>$125 млрд</td><td class="real-value">$68 млрд</td></tr>
-                    <tr><td>33. 🇬🇷 Греция</td><td>$250 млрд</td><td class="real-value">$136 млрд</td><td>$115 млрд</td><td class="real-value">$62 млрд</td></tr>
-                    <tr><td>34. 🇳🇿 Новая Зеландия</td><td>$260 млрд</td><td class="real-value">$142 млрд</td><td>$100 млрд</td><td class="real-value">$54 млрд</td></tr>
-                    <tr><td>35. 🇸🇬 Сингапур</td><td>$520 млрд</td><td class="real-value">$284 млрд</td><td>$95 млрд</td><td class="real-value">$51 млрд</td></tr>
-                    <tr><td>36. 🇨🇱 Чили</td><td>$350 млрд</td><td class="real-value">$191 млрд</td><td>$90 млрд</td><td class="real-value">$49 млрд</td></tr>
-                    <tr><td>37. 🇷🇴 Румыния</td><td>$370 млрд</td><td class="real-value">$202 млрд</td><td>$85 млрд</td><td class="real-value">$46 млрд</td></tr>
-                    <tr><td>38. 🇵🇹 Португалия</td><td>$290 млрд</td><td class="real-value">$158 млрд</td><td>$80 млрд</td><td class="real-value">$43 млрд</td></tr>
-                    <tr><td>39. 🇵🇭 Филиппины</td><td>$470 млрд</td><td class="real-value">$256 млрд</td><td>$75 млрд</td><td class="real-value">$40 млрд</td></tr>
-                    <tr><td>40. 🇲🇾 Малайзия</td><td>$440 млрд</td><td class="real-value">$240 млрд</td><td>$70 млрд</td><td class="real-value">$38 млрд</td></tr>
-                    <tr><td>41. 🇪🇬 Египет</td><td>$380 млрд</td><td class="real-value">$207 млрд</td><td>$65 млрд</td><td class="real-value">$35 млрд</td></tr>
-                    <tr><td>42. 🇻🇳 Вьетнам</td><td>$460 млрд</td><td class="real-value">$251 млрд</td><td>$60 млрд</td><td class="real-value">$32 млрд</td></tr>
-                    <tr><td>43. 🇨🇿 Чехия</td><td>$340 млрд</td><td class="real-value">$185 млрд</td><td>$58 млрд</td><td class="real-value">$31 млрд</td></tr>
-                    <tr><td>44. 🇫🇮 Финляндия</td><td>$300 млрд</td><td class="real-value">$163 млрд</td><td>$55 млрд</td><td class="real-value">$30 млрд</td></tr>
-                    <tr><td>45. 🇵🇪 Перу</td><td>$280 млрд</td><td class="real-value">$153 млрд</td><td>$50 млрд</td><td class="real-value">$27 млрд</td></tr>
-                    <tr><td>46. 🇭🇺 Венгрия</td><td>$220 млрд</td><td class="real-value">$120 млрд</td><td>$48 млрд</td><td class="real-value">$26 млрд</td></tr>
-                    <tr><td>47. 🇩🇿 Алжир</td><td>$260 млрд</td><td class="real-value">$142 млрд</td><td>$45 млрд</td><td class="real-value">$24 млрд</td></tr>
-                    <tr><td>48. 🇰🇿 Казахстан</td><td>$290 млрд</td><td class="real-value">$158 млрд</td><td>$42 млрд</td><td class="real-value">$22 млрд</td></tr>
-                    <tr><td>49. 🇰🇼 Кувейт</td><td>$160 млрд</td><td class="real-value">$87 млрд</td><td>$40 млрд</td><td class="real-value">$21 млрд</td></tr>
-                    <tr><td>50. 🇶🇦 Катар</td><td>$220 млрд</td><td class="real-value">$120 млрд</td><td>$38 млрд</td><td class="real-value">$20 млрд</td></tr>
+                    <tr><td>1</td><td>🇺🇸 США</td><td>$28 780 млрд</td><td class="growth-pos">+67%</td><td class="growth-pos">1.67x</td></tr>
+                    <tr><td>2</td><td>🇨🇳 Китай</td><td>$18 530 млрд</td><td class="growth-mega">+510%</td><td class="growth-mega">6.10x</td></tr>
+                    <tr><td>3</td><td>🇩🇪 Германия</td><td>$4 590 млрд</td><td class="growth-pos">+32%</td><td class="growth-pos">1.32x</td></tr>
+                    <tr><td>4</td><td>🇯🇵 Япония</td><td>$4 110 млрд</td><td class="growth-pos">+18%</td><td class="growth-pos">1.18x</td></tr>
+                    <tr><td>5</td><td>🇮🇳 Индия</td><td>$3 930 млрд</td><td class="growth-mega">+385%</td><td class="growth-mega">4.85x</td></tr>
+                    <tr><td>6</td><td>🇬🇧 Великобритания</td><td>$3 500 млрд</td><td class="growth-pos">+48%</td><td class="growth-pos">1.48x</td></tr>
+                    <tr><td>7</td><td>🇫🇷 Франция</td><td>$3 130 млрд</td><td class="growth-pos">+36%</td><td class="growth-pos">1.36x</td></tr>
+                    <tr><td>8</td><td>🇮🇹 Италия</td><td>$2 330 млрд</td><td class="growth-pos">+12%</td><td class="growth-pos">1.12x</td></tr>
+                    <tr><td>9</td><td>🇧🇷 Бразилия</td><td>$2 330 млрд</td><td class="growth-pos">+68%</td><td class="growth-pos">1.68x</td></tr>
+                    <tr><td>10</td><td>🇨🇦 Канада</td><td>$2 240 млрд</td><td class="growth-pos">+60%</td><td class="growth-pos">1.60x</td></tr>
+                    <tr class="highlight-row"><td>11</td><td>🇷🇺 Россия</td><td>$2 050 млрд</td><td class="growth-pos">+86%</td><td class="growth-pos">1.86x</td></tr>
+                    <tr><td>12</td><td>🇲🇽 Мексика</td><td>$2 010 млрд</td><td class="growth-pos">+65%</td><td class="growth-pos">1.65x</td></tr>
+                    <tr><td>13</td><td>🇦🇺 Австралия</td><td>$1 790 млрд</td><td class="growth-pos">+92%</td><td class="growth-pos">1.92x</td></tr>
+                    <tr><td>14</td><td>🇰🇷 Южная Корея</td><td>$1 760 млрд</td><td class="growth-pos">+128%</td><td class="growth-pos">2.28x</td></tr>
+                    <tr><td>15</td><td>🇪🇸 Испания</td><td>$1 640 млрд</td><td class="growth-pos">+48%</td><td class="growth-pos">1.48x</td></tr>
+                    <tr><td>16</td><td>🇮🇩 Индонезия</td><td>$1 470 млрд</td><td class="growth-pos">+185%</td><td class="growth-pos">2.85x</td></tr>
+                    <tr><td>17</td><td>🇳🇱 Нидерланды</td><td>$1 140 млрд</td><td class="growth-pos">+44%</td><td class="growth-pos">1.44x</td></tr>
+                    <tr><td>18</td><td>🇹🇷 Турция</td><td>$1 110 млрд</td><td class="growth-pos">+195%</td><td class="growth-pos">2.95x</td></tr>
+                    <tr><td>19</td><td>🇸🇦 Саудовская Аравия</td><td>$1 100 млрд</td><td class="growth-pos">+110%</td><td class="growth-pos">2.10x</td></tr>
+                    <tr><td>20</td><td>🇨🇭 Швейцария</td><td>$930 млрд</td><td class="growth-pos">+58%</td><td class="growth-pos">1.58x</td></tr>
+                    <tr><td>21</td><td>🇵🇱 Польша</td><td>$840 млрд</td><td class="growth-pos">+145%</td><td class="growth-pos">2.45x</td></tr>
+                    <tr><td>22</td><td>🇹🇼 Тайвань</td><td>$800 млрд</td><td class="growth-pos">+130%</td><td class="growth-pos">2.30x</td></tr>
+                    <tr><td>23</td><td>🇧🇪 Бельгия</td><td>$650 млрд</td><td class="growth-pos">+45%</td><td class="growth-pos">1.45x</td></tr>
+                    <tr><td>24</td><td>🇸🇪 Швеция</td><td>$620 млрд</td><td class="growth-pos">+62%</td><td class="growth-pos">1.62x</td></tr>
+                    <tr><td>25</td><td>🇦🇷 Аргентина</td><td>$600 млрд</td><td class="growth-pos">+42%</td><td class="growth-pos">1.42x</td></tr>
+                    <tr><td>26</td><td>🇮🇪 Ирландия</td><td>$560 млрд</td><td class="growth-mega">+310%</td><td class="growth-mega">4.10x</td></tr>
+                    <tr><td>27</td><td>🇦🇹 Австрия</td><td>$540 млрд</td><td class="growth-pos">+38%</td><td class="growth-pos">1.38x</td></tr>
+                    <tr><td>28</td><td>🇹🇭 Таиланд</td><td>$540 млрд</td><td class="growth-pos">+105%</td><td class="growth-pos">2.05x</td></tr>
+                    <tr><td>29</td><td>🇮🇱 Израиль</td><td>$530 млрд</td><td class="growth-pos">+135%</td><td class="growth-pos">2.35x</td></tr>
+                    <tr><td>30</td><td>🇦🇪 ОАЭ</td><td>$530 млрд</td><td class="growth-pos">+150%</td><td class="growth-pos">2.50x</td></tr>
+                    <tr><td>31</td><td>🇳🇴 Норвегия</td><td>$520 млрд</td><td class="growth-pos">+45%</td><td class="growth-pos">1.45x</td></tr>
+                    <tr><td>32</td><td>🇸🇬 Сингапур</td><td>$520 млрд</td><td class="growth-pos">+180%</td><td class="growth-pos">2.80x</td></tr>
+                    <tr><td>33</td><td>🇵🇭 Филиппины</td><td>$470 млрд</td><td class="growth-pos">+220%</td><td class="growth-pos">3.20x</td></tr>
+                    <tr><td>34</td><td>🇻🇳 Вьетнам</td><td>$460 млрд</td><td class="growth-mega">+440%</td><td class="growth-mega">5.40x</td></tr>
+                    <tr><td>35</td><td>🇲🇾 Малайзия</td><td>$440 млрд</td><td class="growth-pos">+175%</td><td class="growth-pos">2.75x</td></tr>
+                    <tr><td>36</td><td>🇩🇰 Дания</td><td>$420 млрд</td><td class="growth-pos">+40%</td><td class="growth-pos">1.40x</td></tr>
+                    <tr><td>37</td><td>ﺑﻨﮕﻼﺩﺵ Бангладеш</td><td>$420 млрд</td><td class="growth-mega">+410%</td><td class="growth-mega">5.10x</td></tr>
+                    <tr><td>38</td><td>🇿🇦 ЮАР</td><td>$380 млрд</td><td class="growth-pos">+65%</td><td class="growth-pos">1.65x</td></tr>
+                    <tr><td>39</td><td>🇨🇴 Колумбия</td><td>$380 млрд</td><td class="growth-pos">+115%</td><td class="growth-pos">2.15x</td></tr>
+                    <tr><td>40</td><td>🇪🇬 Египет</td><td>$380 млрд</td><td class="growth-pos">+160%</td><td class="growth-pos">2.60x</td></tr>
+                    <tr><td>41</td><td>🇷🇴 Румыния</td><td>$370 млрд</td><td class="growth-pos">+120%</td><td class="growth-pos">2.20x</td></tr>
+                    <tr><td>42</td><td>🇨🇱 Чили</td><td>$350 млрд</td><td class="growth-pos">+110%</td><td class="growth-pos">2.10x</td></tr>
+                    <tr><td>43</td><td>🇨🇿 Чехия</td><td>$340 млрд</td><td class="growth-pos">+75%</td><td class="growth-pos">1.75x</td></tr>
+                    <tr><td>44</td><td>🇫🇮 Финляндия</td><td>$300 млрд</td><td class="growth-pos">+35%</td><td class="growth-pos">1.35x</td></tr>
+                    <tr><td>45</td><td>🇵🇹 Португалия</td><td>$290 млрд</td><td class="growth-pos">+25%</td><td class="growth-pos">1.25x</td></tr>
+                    <tr><td>46</td><td>🇰🇿 Казахстан</td><td>$290 млрд</td><td class="growth-pos">+185%</td><td class="growth-pos">2.85x</td></tr>
+                    <tr><td>47</td><td>🇵🇪 Перу</td><td>$280 млрд</td><td class="growth-pos">+145%</td><td class="growth-pos">2.45x</td></tr>
+                    <tr><td>48</td><td>🇳🇿 Новая Зеландия</td><td>$260 млрд</td><td class="growth-pos">+80%</td><td class="growth-pos">1.80x</td></tr>
+                    <tr><td>49</td><td>🇩🇿 Алжир</td><td>$260 млрд</td><td class="growth-pos">+95%</td><td class="growth-pos">1.95x</td></tr>
+                    <tr><td>50</td><td>🇬🇷 Греция</td><td>$250 млрд</td><td class="growth-neg">-5%</td><td class="growth-neg">0.95x</td></tr>
+                    <tr><td>51</td><td>🇮🇶 Ирак</td><td>$250 млрд</td><td class="growth-pos">+140%</td><td class="growth-pos">2.40x</td></tr>
+                    <tr><td>52</td><td>🇭🇺 Венгрия</td><td>$220 млрд</td><td class="growth-pos">+78%</td><td class="growth-pos">1.78x</td></tr>
+                    <tr><td>53</td><td>🇶🇦 Катар</td><td>$220 млрд</td><td class="growth-mega">+320%</td><td class="growth-mega">4.20x</td></tr>
+                    <tr class="highlight-row"><td>54</td><td>🇺🇦 Украина</td><td>$170 млрд</td><td class="growth-pos">+16%</td><td class="growth-pos">1.16x</td></tr>
+                    <tr><td>55</td><td>🇰🇼 Кувейт</td><td>$160 млрд</td><td class="growth-pos">+65%</td><td class="growth-pos">1.65x</td></tr>
+                    <tr><td>56</td><td>🇪🇹 Эфиопия</td><td>$155 млрд</td><td class="growth-mega">+580%</td><td class="growth-mega">6.80x</td></tr>
+                    <tr><td>57</td><td>🇲🇦 Марокко</td><td>$150 млрд</td><td class="growth-pos">+130%</td><td class="growth-pos">2.30x</td></tr>
+                    <tr><td>58</td><td>🇸🇰 Словакия</td><td>$140 млрд</td><td class="growth-pos">+115%</td><td class="growth-pos">2.15x</td></tr>
+                    <tr><td>59</td><td>🇨🇺 Куба</td><td>$135 млрд</td><td class="growth-pos">+45%</td><td class="growth-pos">1.45x</td></tr>
+                    <tr><td>60</td><td>🇩🇴 Доминиканская Респ.</td><td>$125 млрд</td><td class="growth-pos">+185%</td><td class="growth-pos">2.85x</td></tr>
+                    <tr><td>61</td><td>🇪🇨 Эквадор</td><td>$120 млрд</td><td class="growth-pos">+85%</td><td class="growth-pos">1.85x</td></tr>
+                    <tr><td>62</td><td>🇵🇷 Пуэрто-Рико</td><td>$115 млрд</td><td class="growth-neg">-12%</td><td class="growth-neg">0.88x</td></tr>
+                    <tr><td>63</td><td>🇰🇪 Кения</td><td>$110 млрд</td><td class="growth-pos">+165%</td><td class="growth-pos">2.65x</td></tr>
+                    <tr><td>64</td><td>🇴🇲 Оман</td><td>$110 млрд</td><td class="growth-pos">+120%</td><td class="growth-pos">2.20x</td></tr>
+                    <tr><td>65</td><td>🇧🇬 Болгария</td><td>$105 млрд</td><td class="growth-pos">+95%</td><td class="growth-pos">1.95x</td></tr>
+                    <tr><td>66</td><td>🇬🇹 Гватемала</td><td>$105 млрд</td><td class="growth-pos">+110%</td><td class="growth-pos">2.10x</td></tr>
+                    <tr><td>67</td><td>🇻🇪 Венесуэла</td><td>$100 млрд</td><td class="growth-neg">-65%</td><td class="growth-neg">0.35x</td></tr>
+                    <tr><td>68</td><td>🇨🇷 Коста-Рика</td><td>$95 млрд</td><td class="growth-pos">+135%</td><td class="growth-pos">2.35x</td></tr>
+                    <tr><td>69</td><td>🇺🇿 Узбекистан</td><td>$95 млрд</td><td class="growth-pos">+240%</td><td class="growth-pos">3.40x</td></tr>
+                    <tr><td>70</td><td>🇦🇴 Ангола</td><td>$90 млрд</td><td class="growth-pos">+150%</td><td class="growth-pos">2.50x</td></tr>
+                    <tr><td>71</td><td>🇱🇺 Люксембург</td><td>$90 млрд</td><td class="growth-pos">+65%</td><td class="growth-pos">1.65x</td></tr>
+                    <tr><td>72</td><td>🇭🇷 Хорватия</td><td>$85 млрд</td><td class="growth-pos">+58%</td><td class="growth-pos">1.58x</td></tr>
+                    <tr><td>73</td><td>🇵🇦 Панама</td><td>$85 млрд</td><td class="growth-pos">+210%</td><td class="growth-pos">3.10x</td></tr>
+                    <tr><td>74</td><td>🇨🇮 Кот-д'Ивуар</td><td>$80 млрд</td><td class="growth-pos">+125%</td><td class="growth-pos">2.25x</td></tr>
+                    <tr><td>75</td><td>🇺🇾 Уругвай</td><td>$80 млрд</td><td class="growth-pos">+82%</td><td class="growth-pos">1.82x</td></tr>
+                    <tr><td>76</td><td>🇷🇸 Сербия</td><td>$75 млрд</td><td class="growth-pos">+88%</td><td class="growth-pos">1.88x</td></tr>
+                    <tr><td>77</td><td>🇱🇹 Литва</td><td>$75 млрд</td><td class="growth-pos">+115%</td><td class="growth-pos">2.15x</td></tr>
+                    <tr><td>78</td><td>🇹🇿 Танзания</td><td>$75 млрд</td><td class="growth-pos">+230%</td><td class="growth-pos">3.30x</td></tr>
+                    <tr><td>79</td><td>🇦🇿 Азербайджан</td><td>$75 млрд</td><td class="growth-pos">+260%</td><td class="growth-pos">3.60x</td></tr>
+                    <tr><td>80</td><td>🇬🇭 Гана</td><td>$70 млрд</td><td class="growth-pos">+190%</td><td class="growth-pos">2.90x</td></tr>
+                    <tr><td>81</td><td>🇱🇰 Шри-Ланка</td><td>$70 млрд</td><td class="growth-pos">+105%</td><td class="growth-pos">2.05x</td></tr>
+                    <tr><td>82</td><td>🇨🇩 ДР Конго</td><td>$65 млрд</td><td class="growth-pos">+160%</td><td class="growth-pos">2.60x</td></tr>
+                    <tr><td>83</td><td>🇸🇮 Словения</td><td>$65 млрд</td><td class="growth-pos">+62%</td><td class="growth-pos">1.62x</td></tr>
+                    <tr><td>84</td><td>🇧🇾 Беларусь</td><td>$65 млрд</td><td class="growth-pos">+75%</td><td class="growth-pos">1.75x</td></tr>
+                    <tr><td>85</td><td>🇲🇲 Мьянма</td><td>$60 млрд</td><td class="growth-pos">+140%</td><td class="growth-pos">2.40x</td></tr>
+                    <tr><td>86</td><td>🇺🇬 Уганда</td><td>$55 млрд</td><td class="growth-pos">+210%</td><td class="growth-pos">3.10x</td></tr>
+                    <tr><td>87</td><td>🇹🇳 Тунис</td><td>$50 млрд</td><td class="growth-pos">+65%</td><td class="growth-pos">1.65x</td></tr>
+                    <tr><td>88</td><td>🇯🇴 Иордания</td><td>$50 млрд</td><td class="growth-pos">+105%</td><td class="growth-pos">2.05x</td></tr>
+                    <tr><td>89</td><td>🇨🇲 Камерун</td><td>$50 млрд</td><td class="growth-pos">+115%</td><td class="growth-pos">2.15x</td></tr>
+                    <tr><td>90</td><td>🇧🇴 Боливия</td><td>$45 млрд</td><td class="growth-pos">+110%</td><td class="growth-pos">2.10x</td></tr>
+                    <tr><td>91</td><td>🇱🇻 Латвия</td><td>$45 млрд</td><td class="growth-pos">+85%</td><td class="growth-pos">1.85x</td></tr>
+                    <tr><td>92</td><td>🇧🇭 Бахрейн</td><td>$45 млрд</td><td class="growth-pos">+120%</td><td class="growth-pos">2.20x</td></tr>
+                    <tr><td>93</td><td>🇵🇾 Парагвай</td><td>$45 млрд</td><td class="growth-pos">+95%</td><td class="growth-pos">1.95x</td></tr>
+                    <tr><td>94</td><td>🇪🇪 Эстония</td><td>$40 млрд</td><td class="growth-pos">+92%</td><td class="growth-pos">1.92x</td></tr>
+                    <tr><td>95</td><td>🇳🇵 Непал</td><td>$40 млрд</td><td class="growth-pos">+110%</td><td class="growth-pos">2.10x</td></tr>
+                    <tr><td>96</td><td>🇱🇾 Ливия</td><td>$40 млрд</td><td class="growth-neg">-15%</td><td class="growth-neg">0.85x</td></tr>
+                    <tr><td>97</td><td>🇲🇴 Макао</td><td>$40 млрд</td><td class="growth-pos">+150%</td><td class="growth-pos">2.50x</td></tr>
+                    <tr><td>98</td><td>🇸🇻 Сальвадор</td><td>$35 млрд</td><td class="growth-pos">+65%</td><td class="growth-pos">1.65x</td></tr>
+                    <tr><td>99</td><td>🇭🇳 Гондурас</td><td>$35 млрд</td><td class="growth-pos">+115%</td><td class="growth-pos">2.15x</td></tr>
+                    <tr><td>100</td><td>🇵🇬 Папуа - Новая Гвинея</td><td>$35 млрд</td><td class="growth-pos">+120%</td><td class="growth-pos">2.20x</td></tr>
                 </tbody>
             </table>
         </div>
     </div>
 
     <footer>
-        <p>Чистая логика. Без иллюзий. Вектор на правду.</p>
+        <p>© 2026 The Real Economy. Вычисляем правду сложным процентом.</p>
     </footer>
 
 </body>

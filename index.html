@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Real Economy | Интерактивный аудит</title>
+    <title>The Real Economy | Системный Терминал</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     
     <style>
@@ -16,6 +16,7 @@
             --accent-red: #ef4444;
             --accent-blue: #3b82f6;
             --accent-purple: #8b5cf6;
+            --accent-yellow: #eab308;
             --border-color: #334155;
         }
         body {
@@ -34,52 +35,54 @@
         p.subtitle { color: var(--text-muted); font-size: 1.1rem; line-height: 1.6; }
         
         .container { width: 100%; max-width: 1200px; padding: 1rem; box-sizing: border-box; }
-        .section-title { font-size: 1.8rem; margin-top: 3rem; border-bottom: 2px solid var(--accent-purple); display: inline-block; padding-bottom: 0.5rem;}
+        .section-title { font-size: 1.8rem; margin-top: 3.5rem; margin-bottom: 1rem; border-bottom: 2px solid var(--border-color); display: inline-block; padding-bottom: 0.5rem; }
         
-        .info-box { background-color: var(--card-bg); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid var(--accent-purple); }
+        .info-box { background-color: var(--card-bg); padding: 1.5rem; border-radius: 8px; margin-bottom: 1.5rem; line-height: 1.5; font-size: 0.95rem; }
+        .budget-box { border-left: 4px solid var(--accent-green); }
+        .gdp-box { border-left: 4px solid var(--accent-blue); }
+        .pop-box { border-left: 4px solid var(--accent-purple); }
+        .trade-box { border-left: 4px solid var(--accent-yellow); }
         
-        .table-wrapper { background-color: var(--card-bg); border-radius: 8px; overflow-x: auto; box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3); }
+        .table-wrapper { background-color: var(--card-bg); border-radius: 8px; overflow-x: auto; max-height: 500px; overflow-y: auto; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.3); margin-bottom: 2rem;}
         table { width: 100%; border-collapse: collapse; text-align: right; }
         th, td { padding: 0.8rem 1rem; border-bottom: 1px solid var(--border-color); white-space: nowrap; }
         th:nth-child(1), td:nth-child(1), th:nth-child(2), td:nth-child(2) { text-align: left; }
-        th { background-color: #0f172a; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+        th { background-color: #0f172a; color: var(--text-muted); font-weight: 600; text-transform: uppercase; position: sticky; top: 0; z-index: 10; }
         
-        /* Делаем строки кликабельными визуально */
+        /* Кликабельные строки */
         .clickable-row { cursor: pointer; transition: 0.2s; }
-        .clickable-row:hover { background-color: #334155; transform: scale(1.01); box-shadow: 0 0 10px rgba(139, 92, 246, 0.2); }
-        .clickable-row td:nth-child(2):after { content: " 📊"; font-size: 0.8rem; opacity: 0.5; }
+        .clickable-row:hover { background-color: #334155; box-shadow: inset 4px 0 0 var(--accent-blue); }
+        .clickable-row td:nth-child(2):after { content: " 📊"; font-size: 0.8rem; opacity: 0.6; }
         
-        .col-pop { color: #a78bfa; font-weight: bold; }
+        .col-budget { color: var(--accent-green); font-weight: 500; }
+        .col-gdp { color: var(--accent-blue); font-weight: 500; }
+        .col-pop { color: var(--accent-purple); font-weight: 500; }
+        
+        .balance-proficit { color: var(--accent-green); font-weight: bold; background-color: rgba(16, 185, 129, 0.1); padding: 0.2rem 0.5rem; border-radius: 4px; }
+        .balance-deficit { color: var(--accent-red); font-weight: bold; background-color: rgba(239, 68, 68, 0.1); padding: 0.2rem 0.5rem; border-radius: 4px; }
         .growth-pos { color: var(--accent-green); font-weight: bold; }
         .growth-neg { color: var(--accent-red); font-weight: bold; }
 
         /* ВСПЛЫВАЮЩЕЕ ОКНО (МОДАЛКА) */
         .modal-overlay {
             display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.8); z-index: 1000; justify-content: center; align-items: center;
-            backdrop-filter: blur(4px);
+            background-color: rgba(0, 0, 0, 0.85); z-index: 1000; justify-content: center; align-items: center;
+            backdrop-filter: blur(5px);
         }
         .modal-content {
             background-color: var(--card-bg); padding: 2rem; border-radius: 12px;
-            width: 90%; max-width: 800px; position: relative; border: 1px solid var(--border-color);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.5);
+            width: 90%; max-width: 900px; position: relative; border: 1px solid var(--border-color);
         }
-        .close-btn {
-            position: absolute; top: 1rem; right: 1.5rem; font-size: 2rem;
-            color: var(--text-muted); cursor: pointer; transition: 0.2s;
-        }
+        .close-btn { position: absolute; top: 1rem; right: 1.5rem; font-size: 2rem; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
         .close-btn:hover { color: var(--accent-red); }
         
         .modal-header { border-bottom: 1px solid var(--border-color); padding-bottom: 1rem; margin-bottom: 1.5rem; }
         .modal-title { font-size: 1.8rem; margin: 0; color: var(--text-main); }
-        .modal-subtitle { color: var(--accent-purple); font-size: 1.1rem; margin-top: 0.5rem; }
+        .modal-subtitle { color: var(--accent-blue); font-size: 1.1rem; margin-top: 0.5rem; font-weight: 500; }
         
         .chart-container { position: relative; height: 350px; width: 100%; }
         
-        .stats-grid {
-            display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem;
-            background-color: #0f172a; padding: 1rem; border-radius: 8px;
-        }
+        .stats-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; background-color: #0f172a; padding: 1rem; border-radius: 8px; }
         .stat-item { text-align: center; }
         .stat-label { color: var(--text-muted); font-size: 0.9rem; text-transform: uppercase; }
         .stat-value { font-size: 1.5rem; font-weight: bold; margin-top: 0.3rem; }
@@ -88,38 +91,63 @@
 <body>
 
     <header>
-        <h1>The Real <span>Economy</span></h1>
-        <p class="subtitle">Нажми на страну в таблице, чтобы открыть исторический терминал данных.</p>
+        <h1>The Real <span>Terminal</span></h1>
+        <p class="subtitle">Интерактивная макроэкономическая матрица. Кликни на страну со значком 📊 в любой таблице, чтобы загрузить исторический график.</p>
     </header>
 
     <div class="container">
         
-        <h2 class="section-title">Демографическая динамика (Кликабельно)</h2>
-        <div class="info-box pop-box">
-            <strong>Интерактивный модуль:</strong> Нажми на строку Китая, США, России или Украины, чтобы активировать JavaScript-алгоритм и увидеть график изменения населения по годам с расчетом исторического тренда.
-        </div>
-        
+        <h2 class="section-title" style="border-bottom-color: var(--accent-green);">1. Государственные Бюджеты</h2>
+        <div class="info-box budget-box">Финансовая емкость казны. Выбери страну для просмотра номинальной динамики бюджета с 2000 года.</div>
         <div class="table-wrapper">
             <table>
                 <thead>
-                    <tr><th>№</th><th>Страна</th><th>Население 2025 (млн чел.)</th><th>Статус тренда</th></tr>
+                    <tr><th>№</th><th>Страна</th><th>Бюджет 2025/26</th><th>Реальный (в ценах 2000)</th><th>Глобальный Рост Казны</th></tr>
                 </thead>
                 <tbody>
-                    <tr class="clickable-row" onclick="openTerminal('Китай')">
-                        <td>1</td><td>🇨🇳 Китай</td><td class="col-pop">1 410.0</td><td class="growth-neg">Замедление</td>
-                    </tr>
-                    <tr class="clickable-row" onclick="openTerminal('США')">
-                        <td>2</td><td>🇺🇸 США</td><td class="col-pop">345.0</td><td class="growth-pos">Рост</td>
-                    </tr>
-                    <tr class="clickable-row" onclick="openTerminal('Россия')">
-                        <td>3</td><td>🇷🇺 Россия</td><td class="col-pop">146.0</td><td class="growth-neg">Убыль</td>
-                    </tr>
-                    <tr class="clickable-row" onclick="openTerminal('Украина')">
-                        <td>4</td><td>🇺🇦 Украина</td><td class="col-pop">37.0</td><td class="growth-neg">Структурное падение</td>
-                    </tr>
+                    <tr class="clickable-row" onclick="openTerminal('budget', 'США')"><td>1</td><td>🇺🇸 США</td><td class="col-budget">$6 900 млрд</td><td>$3 770 млрд</td><td class="growth-pos">2.1x</td></tr>
+                    <tr class="clickable-row" onclick="openTerminal('budget', 'Китай')"><td>2</td><td>🇨🇳 Китай</td><td class="col-budget">$3 900 млрд</td><td>$2 131 млрд</td><td class="growth-pos">14.2x</td></tr>
+                    <tr class="clickable-row" onclick="openTerminal('budget', 'Германия')"><td>6</td><td>🇩🇪 Германия</td><td class="col-budget">$560 млрд</td><td>$306 млрд</td><td class="growth-pos">1.3x</td></tr>
+                    <tr class="clickable-row highlight-row" onclick="openTerminal('budget', 'Россия')"><td>10</td><td>🇷🇺 Россия</td><td class="col-budget">$377 млрд</td><td>$206 млрд</td><td class="growth-pos">5.6x</td></tr>
+                    <tr class="clickable-row highlight-row" onclick="openTerminal('budget', 'Украина')"><td>31</td><td>🇺🇦 Украина</td><td class="col-budget">$130 млрд</td><td>$71 млрд</td><td class="growth-pos">11.4x</td></tr>
                 </tbody>
             </table>
         </div>
+
+        <h2 class="section-title" style="border-bottom-color: var(--accent-blue);">2. Валовой Внутренний Продукт</h2>
+        <div class="info-box gdp-box">Динамика глобального веса экономики. Графики показывают рост номинального долларового ВВП стран.</div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr><th>№</th><th>Страна</th><th>Номинал ВВП 2025/26</th><th>Глобальный вес (2000г)</th><th>Чистый физ. рост</th></tr>
+                </thead>
+                <tbody>
+                    <tr class="clickable-row" onclick="openTerminal('gdp', 'США')"><td>1</td><td>🇺🇸 США</td><td class="col-gdp">$28 780 млрд</td><td>$15 726 млрд</td><td class="growth-pos">+67%</td></tr>
+                    <tr class="clickable-row" onclick="openTerminal('gdp', 'Китай')"><td>2</td><td>🇨🇳 Китай</td><td class="col-gdp">$18 530 млрд</td><td>$10 125 млрд</td><td class="growth-pos">+510%</td></tr>
+                    <tr class="clickable-row" onclick="openTerminal('gdp', 'Германия')"><td>3</td><td>🇩🇪 Германия</td><td class="col-gdp">$4 590 млрд</td><td>$2 508 млрд</td><td class="growth-pos">+32%</td></tr>
+                    <tr class="clickable-row highlight-row" onclick="openTerminal('gdp', 'Россия')"><td>11</td><td>🇷🇺 Россия</td><td class="col-gdp">$2 050 млрд</td><td>$1 120 млрд</td><td class="growth-pos">+86%</td></tr>
+                    <tr class="clickable-row highlight-row" onclick="openTerminal('gdp', 'Украина')"><td>54</td><td>🇺🇦 Украина</td><td class="col-gdp">$207 млрд</td><td>$113.1 млрд</td><td class="growth-pos">+20%</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="section-title" style="border-bottom-color: var(--accent-yellow);">3. Внешняя Торговля (Экспорт)</h2>
+        <div class="info-box trade-box">Товарные потоки. График показывает динамику наращивания (или падения) экспортной выручки государств на мировом рынке.</div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr><th>№</th><th>Страна</th><th>Годовой Экспорт</th><th>Годовой Импорт</th><th>Торговый Баланс</th></tr>
+                </thead>
+                <tbody>
+                    <tr class="clickable-row" onclick="openTerminal('export', 'Китай')"><td>1</td><td>🇨🇳 Китай</td><td>$3 380 млрд</td><td>$2 560 млрд</td><td><span class="balance-proficit">+$820 млрд</span></td></tr>
+                    <tr class="clickable-row" onclick="openTerminal('export', 'США')"><td>2</td><td>🇺🇸 США</td><td>$2 050 млрд</td><td>$3 100 млрд</td><td><span class="balance-deficit">-$1050 млрд</span></td></tr>
+                    <tr class="clickable-row" onclick="openTerminal('export', 'Германия')"><td>3</td><td>🇩🇪 Германия</td><td>$1 680 млрд</td><td>$1 350 млрд</td><td><span class="balance-proficit">+$330 млрд</span></td></tr>
+                    <tr class="clickable-row highlight-row" onclick="openTerminal('export', 'Россия')"><td>11</td><td>🇷🇺 Россия</td><td>$420 млрд</td><td>$300 млрд</td><td><span class="balance-proficit">+$120 млрд</span></td></tr>
+                    <tr class="clickable-row highlight-row" onclick="openTerminal('export', 'Украина')"><td>54</td><td>🇺🇦 Украина</td><td>$36 млрд</td><td>$64 млрд</td><td><span class="balance-deficit">-$28 млрд</span></td></tr>
+                </tbody>
+            </table>
+        </div>
+
     </div>
 
     <div id="terminalOverlay" class="modal-overlay" onclick="closeTerminalOutside(event)">
@@ -127,7 +155,7 @@
             <span class="close-btn" onclick="closeTerminal()">&times;</span>
             <div class="modal-header">
                 <h2 id="termTitle" class="modal-title">Страна</h2>
-                <div id="termSubtitle" class="modal-subtitle">Население: 2000 - 2025</div>
+                <div id="termSubtitle" class="modal-subtitle">Метрика: 2000 - 2025</div>
             </div>
             
             <div class="chart-container">
@@ -136,11 +164,11 @@
             
             <div class="stats-grid">
                 <div class="stat-item">
-                    <div class="stat-label">База 2000 года</div>
+                    <div class="stat-label">Значение 2000 года</div>
                     <div id="statBase" class="stat-value text-main">0</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">Изменение за 25 лет</div>
+                    <div class="stat-label">Номинальный рост за 25 лет</div>
                     <div id="statChange" class="stat-value">0%</div>
                 </div>
             </div>
@@ -148,134 +176,115 @@
     </div>
 
     <script>
-        // 1. НАША БАЗА ДАННЫХ (Формат JSON). Сюда ты потом сможешь дописать любые страны!
+        // Единая База Данных. Разделена на метрики: budget, gdp, export.
         const systemDatabase = {
-            "Китай": {
-                years: [2000, 2005, 2010, 2015, 2020, 2025],
-                data: [1262.6, 1303.7, 1337.7, 1371.2, 1411.7, 1410.0],
-                color: '#ef4444' // Красный цвет линии
+            "budget": {
+                unit: "$ млрд", color: "#10b981", subtitle: "Динамика Государственного Бюджета (Номинал)",
+                "США": { data: [1789, 2472, 3456, 3691, 6550, 6900] },
+                "Китай": { data: [150, 400, 1300, 2600, 3600, 3900] },
+                "Германия": { data: [240, 310, 390, 350, 500, 560] },
+                "Россия": { data: [36, 120, 300, 250, 300, 377] },
+                "Украина": { data: [6, 15, 30, 25, 40, 130] }
             },
-            "США": {
-                years: [2000, 2005, 2010, 2015, 2020, 2025],
-                data: [282.1, 295.5, 309.3, 320.7, 331.4, 345.0],
-                color: '#3b82f6' // Синий
+            "gdp": {
+                unit: "$ млрд", color: "#3b82f6", subtitle: "Динамика Валового Внутреннего Продукта (Номинал)",
+                "США": { data: [10252, 13036, 15048, 18238, 21060, 28780] },
+                "Китай": { data: [1211, 2285, 6087, 11061, 14687, 18530] },
+                "Германия": { data: [1949, 2861, 3396, 3356, 3889, 4590] },
+                "Россия": { data: [259, 764, 1524, 1363, 1488, 2050] },
+                "Украина": { data: [31, 86, 136, 91, 156, 207] }
             },
-            "Россия": {
-                years: [2000, 2005, 2010, 2015, 2020, 2025],
-                data: [146.6, 143.5, 142.8, 144.1, 146.1, 146.0],
-                color: '#10b981' // Зеленый
-            },
-            "Украина": {
-                years: [2000, 2005, 2010, 2015, 2020, 2025],
-                data: [49.1, 47.1, 45.8, 42.8, 41.9, 37.0],
-                color: '#f59e0b' // Желтый/Оранжевый
+            "export": {
+                unit: "$ млрд", color: "#eab308", subtitle: "Динамика Экспортной Выручки (Товары и услуги)",
+                "США": { data: [1070, 1280, 1850, 2260, 2130, 2050] },
+                "Китай": { data: [249, 762, 1577, 2273, 2723, 3380] },
+                "Германия": { data: [550, 970, 1300, 1320, 1380, 1680] },
+                "Россия": { data: [105, 243, 400, 343, 332, 420] },
+                "Украина": { data: [15, 34, 51, 38, 49, 36] }
             }
         };
 
-        let currentChart = null; // Переменная для хранения текущего графика
+        const yearsScale = [2000, 2005, 2010, 2015, 2020, 2025];
+        let currentChart = null; 
 
-        // 2. ФУНКЦИЯ: ОТКРЫТЬ ТЕРМИНАЛ
-        function openTerminal(countryName) {
-            const countryData = systemDatabase[countryName];
+        // Функция теперь принимает 2 параметра: что мы смотрим (metric) и какую страну (countryName)
+        function openTerminal(metric, countryName) {
+            const metricData = systemDatabase[metric];
+            const countryData = metricData[countryName];
             
-            // Если страны нет в базе, выводим ошибку в консоль
             if (!countryData) {
-                alert("Данные истории для этой страны пока загружаются в базу.");
+                alert("Исторические данные для этой страны в данной метрике пока загружаются.");
                 return;
             }
 
-            // Заполняем тексты в окне
-            document.getElementById('termTitle').innerText = `Динамика системы: ${countryName}`;
+            // Настройка текстов и цветов модалки в зависимости от таблицы
+            document.getElementById('termTitle').innerText = `Система: ${countryName}`;
+            document.getElementById('termSubtitle').innerText = metricData.subtitle;
+            document.getElementById('termSubtitle').style.color = metricData.color;
             
-            // Вычисляем математику: рост или падение
-            const startValue = countryData.data[0];
-            const endValue = countryData.data[countryData.data.length - 1];
-            const changePercent = (((endValue - startValue) / startValue) * 100).toFixed(1);
+            const dataArray = countryData.data;
+            const startValue = dataArray[0];
+            const endValue = dataArray[dataArray.length - 1];
             
-            document.getElementById('statBase').innerText = `${startValue} млн`;
+            // Расчет разницы в разах (x) и процентах
+            const multiplier = (endValue / startValue).toFixed(1);
+            const changePercent = (((endValue - startValue) / startValue) * 100).toFixed(0);
+            
+            document.getElementById('statBase').innerText = `${startValue} ${metricData.unit}`;
             
             const changeEl = document.getElementById('statChange');
-            if (changePercent > 0) {
-                changeEl.innerText = `+${changePercent}% (Рост)`;
+            if (endValue >= startValue) {
+                changeEl.innerText = `в ${multiplier} раз (+${changePercent}%)`;
                 changeEl.className = 'stat-value growth-pos';
             } else {
                 changeEl.innerText = `${changePercent}% (Падение)`;
                 changeEl.className = 'stat-value growth-neg';
             }
 
-            // Открываем окно
             document.getElementById('terminalOverlay').style.display = 'flex';
 
-            // 3. РИСУЕМ ГРАФИК
+            // Отрисовка графика
             const ctx = document.getElementById('historyChart').getContext('2d');
-            
-            // Если старый график уже нарисован - удаляем его, иначе они наложатся друг на друга
-            if (currentChart) {
-                currentChart.destroy();
-            }
+            if (currentChart) { currentChart.destroy(); }
 
-            // Команда библиотеке Chart.js нарисовать красоту
             currentChart = new Chart(ctx, {
                 type: 'line',
                 data: {
-                    labels: countryData.years,
+                    labels: yearsScale,
                     datasets: [{
-                        label: 'Население (млн чел.)',
-                        data: countryData.data,
-                        borderColor: countryData.color,
-                        backgroundColor: countryData.color + '33', // Добавляем прозрачность для заливки
+                        label: metricData.subtitle,
+                        data: dataArray,
+                        borderColor: metricData.color,
+                        backgroundColor: metricData.color + '33', 
                         borderWidth: 3,
                         pointRadius: 5,
                         pointBackgroundColor: '#0f172a',
-                        pointBorderColor: countryData.color,
+                        pointBorderColor: metricData.color,
                         pointBorderWidth: 2,
-                        fill: true, // Включаем заливку под линией
-                        tension: 0.3 // Плавный изгиб линии
+                        fill: true, 
+                        tension: 0.3 
                     }]
                 },
                 options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
+                    responsive: true, maintainAspectRatio: false,
                     plugins: {
                         legend: { display: false },
                         tooltip: {
-                            backgroundColor: '#1e293b',
-                            titleFont: { size: 14 },
-                            bodyFont: { size: 16, weight: 'bold' },
-                            padding: 15,
-                            displayColors: false,
-                            callbacks: {
-                                label: function(context) {
-                                    return context.parsed.y + ' млн чел.';
-                                }
-                            }
+                            backgroundColor: '#1e293b', titleFont: { size: 14 }, bodyFont: { size: 16, weight: 'bold' },
+                            padding: 15, displayColors: false,
+                            callbacks: { label: function(context) { return context.parsed.y + ' ' + metricData.unit; } }
                         }
                     },
                     scales: {
-                        y: { 
-                            grid: { color: '#334155' },
-                            ticks: { color: '#94a3b8' }
-                        },
-                        x: { 
-                            grid: { display: false },
-                            ticks: { color: '#94a3b8' }
-                        }
+                        y: { grid: { color: '#334155' }, ticks: { color: '#94a3b8' } },
+                        x: { grid: { display: false }, ticks: { color: '#94a3b8' } }
                     }
                 }
             });
         }
 
-        // ФУНКЦИИ ЗАКРЫТИЯ ОКНА
-        function closeTerminal() {
-            document.getElementById('terminalOverlay').style.display = 'none';
-        }
-        
-        // Закрытие при клике по черному фону
-        function closeTerminalOutside(event) {
-            if (event.target.id === 'terminalOverlay') {
-                closeTerminal();
-            }
-        }
+        function closeTerminal() { document.getElementById('terminalOverlay').style.display = 'none'; }
+        function closeTerminalOutside(event) { if (event.target.id === 'terminalOverlay') { closeTerminal(); } }
     </script>
 </body>
 </html>

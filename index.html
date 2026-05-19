@@ -17,6 +17,7 @@
             --accent-blue: #3b82f6;
             --accent-purple: #8b5cf6;
             --accent-yellow: #eab308;
+            --accent-orange: #f97316;
             --border-color: #334155;
         }
         body {
@@ -49,14 +50,21 @@
         th:nth-child(1), td:nth-child(1), th:nth-child(2), td:nth-child(2) { text-align: left; }
         th { background-color: #0f172a; color: var(--text-muted); font-weight: 600; text-transform: uppercase; position: sticky; top: 0; z-index: 10; }
         
-        /* Кликабельные строки */
+        /* Кликабельные строки для таблиц 1, 2 и 3 */
         .clickable-row { cursor: pointer; transition: 0.2s; }
         .clickable-row:hover { background-color: #334155; box-shadow: inset 4px 0 0 var(--accent-blue); }
         .clickable-row td:nth-child(2):after { content: " 📊"; font-size: 0.8rem; opacity: 0.6; }
         
+        /* Кликабельные ячейки для таблицы 4 (Торговля) */
+        .clickable-cell { cursor: pointer; transition: 0.2s; text-decoration: underline; text-decoration-style: dotted; text-underline-offset: 4px;}
+        .clickable-cell:hover { background-color: #334155; transform: scale(1.05); }
+        .clickable-cell:after { content: " 📊"; font-size: 0.8rem; opacity: 0.6; }
+
         .col-budget { color: var(--accent-green); font-weight: 500; }
         .col-gdp { color: var(--accent-blue); font-weight: 500; }
         .col-pop { color: var(--accent-purple); font-weight: 500; }
+        .col-export { color: var(--accent-yellow); font-weight: 500; }
+        .col-import { color: var(--accent-orange); font-weight: 500; }
         
         .balance-proficit { color: var(--accent-green); font-weight: bold; background-color: rgba(16, 185, 129, 0.1); padding: 0.2rem 0.5rem; border-radius: 4px; }
         .balance-deficit { color: var(--accent-red); font-weight: bold; background-color: rgba(239, 68, 68, 0.1); padding: 0.2rem 0.5rem; border-radius: 4px; }
@@ -64,15 +72,8 @@
         .growth-neg { color: var(--accent-red); font-weight: bold; }
 
         /* ВСПЛЫВАЮЩЕЕ ОКНО (МОДАЛКА) */
-        .modal-overlay {
-            display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background-color: rgba(0, 0, 0, 0.85); z-index: 1000; justify-content: center; align-items: center;
-            backdrop-filter: blur(5px);
-        }
-        .modal-content {
-            background-color: var(--card-bg); padding: 2rem; border-radius: 12px;
-            width: 90%; max-width: 900px; position: relative; border: 1px solid var(--border-color);
-        }
+        .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(5px); }
+        .modal-content { background-color: var(--card-bg); padding: 2rem; border-radius: 12px; width: 90%; max-width: 900px; position: relative; border: 1px solid var(--border-color); }
         .close-btn { position: absolute; top: 1rem; right: 1.5rem; font-size: 2rem; color: var(--text-muted); cursor: pointer; transition: 0.2s; }
         .close-btn:hover { color: var(--accent-red); }
         
@@ -92,7 +93,7 @@
 
     <header>
         <h1>The Real <span>Terminal</span></h1>
-        <p class="subtitle">Интерактивная макроэкономическая матрица. Кликни на страну со значком 📊 в любой таблице, чтобы загрузить исторический график.</p>
+        <p class="subtitle">Интерактивная четырехмерная матрица. Кликай на строки или ячейки со значком 📊 для загрузки графиков.</p>
     </header>
 
     <div class="container">
@@ -131,19 +132,61 @@
             </table>
         </div>
 
-        <h2 class="section-title" style="border-bottom-color: var(--accent-yellow);">3. Внешняя Торговля (Экспорт)</h2>
-        <div class="info-box trade-box">Товарные потоки. График показывает динамику наращивания (или падения) экспортной выручки государств на мировом рынке.</div>
+        <h2 class="section-title" style="border-bottom-color: var(--accent-purple);">3. Демографическая Система</h2>
+        <div class="info-box pop-box">Кликни на строку, чтобы увидеть исторический тренд населения (рост, стагнация или убыль).</div>
         <div class="table-wrapper">
             <table>
                 <thead>
-                    <tr><th>№</th><th>Страна</th><th>Годовой Экспорт</th><th>Годовой Импорт</th><th>Торговый Баланс</th></tr>
+                    <tr><th>№</th><th>Страна</th><th>Население 2025 (млн чел.)</th><th>Статус тренда</th></tr>
                 </thead>
                 <tbody>
-                    <tr class="clickable-row" onclick="openTerminal('export', 'Китай')"><td>1</td><td>🇨🇳 Китай</td><td>$3 380 млрд</td><td>$2 560 млрд</td><td><span class="balance-proficit">+$820 млрд</span></td></tr>
-                    <tr class="clickable-row" onclick="openTerminal('export', 'США')"><td>2</td><td>🇺🇸 США</td><td>$2 050 млрд</td><td>$3 100 млрд</td><td><span class="balance-deficit">-$1050 млрд</span></td></tr>
-                    <tr class="clickable-row" onclick="openTerminal('export', 'Германия')"><td>3</td><td>🇩🇪 Германия</td><td>$1 680 млрд</td><td>$1 350 млрд</td><td><span class="balance-proficit">+$330 млрд</span></td></tr>
-                    <tr class="clickable-row highlight-row" onclick="openTerminal('export', 'Россия')"><td>11</td><td>🇷🇺 Россия</td><td>$420 млрд</td><td>$300 млрд</td><td><span class="balance-proficit">+$120 млрд</span></td></tr>
-                    <tr class="clickable-row highlight-row" onclick="openTerminal('export', 'Украина')"><td>54</td><td>🇺🇦 Украина</td><td>$36 млрд</td><td>$64 млрд</td><td><span class="balance-deficit">-$28 млрд</span></td></tr>
+                    <tr class="clickable-row" onclick="openTerminal('population', 'Китай')"><td>1</td><td>🇨🇳 Китай</td><td class="col-pop">1 410.0</td><td class="growth-neg">Начало убыли</td></tr>
+                    <tr class="clickable-row" onclick="openTerminal('population', 'США')"><td>2</td><td>🇺🇸 США</td><td class="col-pop">345.0</td><td class="growth-pos">Стабильный рост</td></tr>
+                    <tr class="clickable-row" onclick="openTerminal('population', 'Германия')"><td>3</td><td>🇩🇪 Германия</td><td class="col-pop">84.0</td><td class="growth-pos">Слабый рост</td></tr>
+                    <tr class="clickable-row highlight-row" onclick="openTerminal('population', 'Россия')"><td>4</td><td>🇷🇺 Россия</td><td class="col-pop">146.0</td><td class="growth-neg">Убыль</td></tr>
+                    <tr class="clickable-row highlight-row" onclick="openTerminal('population', 'Украина')"><td>5</td><td>🇺🇦 Украина</td><td class="col-pop">37.0</td><td class="growth-neg">Структурная убыль</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h2 class="section-title" style="border-bottom-color: var(--accent-yellow);">4. Внешняя Торговля (Экспорт и Импорт)</h2>
+        <div class="info-box trade-box">Товарные потоки. В этой таблице <strong>кликай отдельно на цифру Экспорта или Импорта</strong>, чтобы изучить их графики по отдельности.</div>
+        <div class="table-wrapper">
+            <table>
+                <thead>
+                    <tr><th>№</th><th>Страна</th><th>Годовой Экспорт (Клик)</th><th>Годовой Импорт (Клик)</th><th>Торговый Баланс</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td><td>🇨🇳 Китай</td>
+                        <td class="col-export clickable-cell" onclick="openTerminal('export', 'Китай')">$3 380 млрд</td>
+                        <td class="col-import clickable-cell" onclick="openTerminal('import', 'Китай')">$2 560 млрд</td>
+                        <td><span class="balance-proficit">+$820 млрд</span></td>
+                    </tr>
+                    <tr>
+                        <td>2</td><td>🇺🇸 США</td>
+                        <td class="col-export clickable-cell" onclick="openTerminal('export', 'США')">$2 050 млрд</td>
+                        <td class="col-import clickable-cell" onclick="openTerminal('import', 'США')">$3 100 млрд</td>
+                        <td><span class="balance-deficit">-$1050 млрд</span></td>
+                    </tr>
+                    <tr>
+                        <td>3</td><td>🇩🇪 Германия</td>
+                        <td class="col-export clickable-cell" onclick="openTerminal('export', 'Германия')">$1 680 млрд</td>
+                        <td class="col-import clickable-cell" onclick="openTerminal('import', 'Германия')">$1 350 млрд</td>
+                        <td><span class="balance-proficit">+$330 млрд</span></td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td>11</td><td>🇷🇺 Россия</td>
+                        <td class="col-export clickable-cell" onclick="openTerminal('export', 'Россия')">$420 млрд</td>
+                        <td class="col-import clickable-cell" onclick="openTerminal('import', 'Россия')">$300 млрд</td>
+                        <td><span class="balance-proficit">+$120 млрд</span></td>
+                    </tr>
+                    <tr class="highlight-row">
+                        <td>54</td><td>🇺🇦 Украина</td>
+                        <td class="col-export clickable-cell" onclick="openTerminal('export', 'Украина')">$36 млрд</td>
+                        <td class="col-import clickable-cell" onclick="openTerminal('import', 'Украина')">$64 млрд</td>
+                        <td><span class="balance-deficit">-$28 млрд</span></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
@@ -168,7 +211,7 @@
                     <div id="statBase" class="stat-value text-main">0</div>
                 </div>
                 <div class="stat-item">
-                    <div class="stat-label">Номинальный рост за 25 лет</div>
+                    <div class="stat-label">Историческое изменение</div>
                     <div id="statChange" class="stat-value">0%</div>
                 </div>
             </div>
@@ -176,10 +219,9 @@
     </div>
 
     <script>
-        // Единая База Данных. Разделена на метрики: budget, gdp, export.
         const systemDatabase = {
             "budget": {
-                unit: "$ млрд", color: "#10b981", subtitle: "Динамика Государственного Бюджета (Номинал)",
+                unit: "$ млрд", color: "#10b981", subtitle: "Динамика Бюджета (Номинал)",
                 "США": { data: [1789, 2472, 3456, 3691, 6550, 6900] },
                 "Китай": { data: [150, 400, 1300, 2600, 3600, 3900] },
                 "Германия": { data: [240, 310, 390, 350, 500, 560] },
@@ -187,27 +229,42 @@
                 "Украина": { data: [6, 15, 30, 25, 40, 130] }
             },
             "gdp": {
-                unit: "$ млрд", color: "#3b82f6", subtitle: "Динамика Валового Внутреннего Продукта (Номинал)",
+                unit: "$ млрд", color: "#3b82f6", subtitle: "Динамика ВВП (Номинал)",
                 "США": { data: [10252, 13036, 15048, 18238, 21060, 28780] },
                 "Китай": { data: [1211, 2285, 6087, 11061, 14687, 18530] },
                 "Германия": { data: [1949, 2861, 3396, 3356, 3889, 4590] },
                 "Россия": { data: [259, 764, 1524, 1363, 1488, 2050] },
                 "Украина": { data: [31, 86, 136, 91, 156, 207] }
             },
+            "population": {
+                unit: "млн чел.", color: "#8b5cf6", subtitle: "Динамика Населения",
+                "США": { data: [282.1, 295.5, 309.3, 320.7, 331.4, 345.0] },
+                "Китай": { data: [1262.6, 1303.7, 1337.7, 1371.2, 1411.7, 1410.0] },
+                "Германия": { data: [82.2, 82.5, 81.7, 81.7, 83.2, 84.0] },
+                "Россия": { data: [146.6, 143.5, 142.8, 144.1, 146.1, 146.0] },
+                "Украина": { data: [49.1, 47.1, 45.8, 42.8, 41.9, 37.0] }
+            },
             "export": {
-                unit: "$ млрд", color: "#eab308", subtitle: "Динамика Экспортной Выручки (Товары и услуги)",
+                unit: "$ млрд", color: "#eab308", subtitle: "Динамика Экспорта",
                 "США": { data: [1070, 1280, 1850, 2260, 2130, 2050] },
                 "Китай": { data: [249, 762, 1577, 2273, 2723, 3380] },
                 "Германия": { data: [550, 970, 1300, 1320, 1380, 1680] },
                 "Россия": { data: [105, 243, 400, 343, 332, 420] },
                 "Украина": { data: [15, 34, 51, 38, 49, 36] }
+            },
+            "import": {
+                unit: "$ млрд", color: "#f97316", subtitle: "Динамика Импорта",
+                "США": { data: [1450, 2020, 2400, 2900, 2800, 3100] },
+                "Китай": { data: [225, 660, 1395, 1680, 2060, 2560] },
+                "Германия": { data: [500, 780, 1060, 1050, 1170, 1350] },
+                "Россия": { data: [44, 98, 248, 182, 231, 300] },
+                "Украина": { data: [14, 36, 60, 37, 54, 64] }
             }
         };
 
         const yearsScale = [2000, 2005, 2010, 2015, 2020, 2025];
         let currentChart = null; 
 
-        // Функция теперь принимает 2 параметра: что мы смотрим (metric) и какую страну (countryName)
         function openTerminal(metric, countryName) {
             const metricData = systemDatabase[metric];
             const countryData = metricData[countryName];
@@ -217,7 +274,6 @@
                 return;
             }
 
-            // Настройка текстов и цветов модалки в зависимости от таблицы
             document.getElementById('termTitle').innerText = `Система: ${countryName}`;
             document.getElementById('termSubtitle').innerText = metricData.subtitle;
             document.getElementById('termSubtitle').style.color = metricData.color;
@@ -226,15 +282,13 @@
             const startValue = dataArray[0];
             const endValue = dataArray[dataArray.length - 1];
             
-            // Расчет разницы в разах (x) и процентах
-            const multiplier = (endValue / startValue).toFixed(1);
-            const changePercent = (((endValue - startValue) / startValue) * 100).toFixed(0);
+            const changePercent = (((endValue - startValue) / startValue) * 100).toFixed(1);
             
             document.getElementById('statBase').innerText = `${startValue} ${metricData.unit}`;
             
             const changeEl = document.getElementById('statChange');
             if (endValue >= startValue) {
-                changeEl.innerText = `в ${multiplier} раз (+${changePercent}%)`;
+                changeEl.innerText = `+${changePercent}% (Рост)`;
                 changeEl.className = 'stat-value growth-pos';
             } else {
                 changeEl.innerText = `${changePercent}% (Падение)`;
@@ -243,7 +297,6 @@
 
             document.getElementById('terminalOverlay').style.display = 'flex';
 
-            // Отрисовка графика
             const ctx = document.getElementById('historyChart').getContext('2d');
             if (currentChart) { currentChart.destroy(); }
 
